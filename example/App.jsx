@@ -214,7 +214,7 @@ export default function App() {
             <span className="picker-label">Granularity Customizer</span>
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
               <span style={{ fontSize: 14 }}>Snapping Interval:</span>
-              {[5, 10, 15, 30, 60].map((int) => (
+              {[1, 5, 10, 15, 30, 60].map((int) => (
                 <button
                   key={int}
                   type="button"

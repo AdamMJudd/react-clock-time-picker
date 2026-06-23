@@ -126,7 +126,7 @@ export default function ClockTimePicker({
   const svgRef     = useRef(null);
   const wrapperRef = useRef(null);
 
-  const validInterval = [5, 10, 15, 30, 60].includes(interval) ? interval : 15;
+  const validInterval = [1, 5, 10, 15, 30, 60].includes(interval) ? interval : 15;
   const slotsPerHour  = 60 / validInterval;
   const totalSlots    = 12 * slotsPerHour;
   const slotAngle     = validInterval / 2;
@@ -324,6 +324,7 @@ export default function ClockTimePicker({
 
               {/* Minute tick marks */}
               {Array.from({ length: totalSlots }, (_, i) => {
+                if (validInterval === 1 && i % 5 !== 0) return null;
                 const a    = i * slotAngle;
                 const outer = polarXY(R - 1, a);
                 const inner = polarXY(TICK_R, a);

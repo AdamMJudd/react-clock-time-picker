@@ -9,9 +9,10 @@ A premium, lightweight, interactive clock-face time picker for React. Select tim
 ## Features
 
 - **No Bloated Dependencies:** Driven purely by React state and math/SVG logic.
-- **Configurable Snapping Intervals:** Dynamically snap mouse/touch angles to 5, 10, 15, 30, or 60-minute increments.
-- **AM/PM card flip:** Transitions smoothly between AM and PM halves with a 3D Y-axis flip.
-- **Modern Themeable CSS:** Fully responsive, supporting custom properties and dark/light modes out of the box.
+- **Configurable Snapping Intervals:** Dynamically snap mouse/touch angles to 1, 5, 10, 15, 30, or 60-minute increments.
+- **Dynamic Day-Phase Indicators:** Center-hub Sun (☀️) and Moon (🌙) SVG indicators representing Midday vs. Midnight.
+- **AM/PM Card Flip:** Transitions smoothly between AM and PM halves with a premium 3D Y-axis flip.
+- **Modern Themeable CSS:** Fully responsive, supporting custom CSS custom properties and dark/light themes out of the box.
 
 ---
 
@@ -45,7 +46,7 @@ function App() {
         label="Start Time"
         value={time}
         onChange={(newTime) => setTime(newTime)}
-        interval={15} // Optional: 5, 10, 15, 30, or 60-minute snapping
+        interval={15} // Optional: 1, 5, 10, 15, 30, or 60-minute snapping
       />
       <p>Selected time in 24h format: {time}</p>
     </div>
@@ -94,7 +95,11 @@ You can run the interactive sandbox locally to test components during developmen
 | `buttonClassName`| `string` | `""` | Custom class appended to the toggle clock icon button. |
 | `placeholder` | `string` | `"e.g. 09:00"` | Placeholder text displayed in the text input. |
 | `disabled` | `boolean` | `false` | When true, disables interactions and input modification. |
-| `interval` | `number` | `15` | The granularity of time slot selection in minutes. Accepted values: `5`, `10`, `15`, `30`, `60`. |
+| `interval` | `number` | `15` | The granularity of time slot selection in minutes. Accepted values: `1`, `5`, `10`, `15`, `30`, `60`. |
+> [!WARNING]
+> **Chronomaniac Mode (1-Minute Snapping):** Yes, for the absolute wildcards who demand surgeon-like, pixel-perfect 1-minute precision, we've enabled a 1-minute interval option. The component will happily segment the clock face into **720 invisible slices**.
+> 
+> To save your eyes and prevent the dial from rendering as a solid black void of despair, the UI only draws tick marks at 5-minute intervals. The selector pointer, however, will faithfully snap to every single minute coordinate. Best of luck navigating this with your morning coffee shakes!
 
 ---
 
