@@ -338,3 +338,20 @@
 .ctp-svg-wrapper.flipping {
   transform: rotateY(90deg);
 }
+
+/* Sun and Moon center hub icons */
+.ctp-sun-icon {
+  fill: #eab308;
+  stroke: #eab308;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.ctp-moon-icon {
+  fill: #94a3b8;
+  pointer-events: none;
+}
+.light-theme .ctp-moon-icon,
+.ctp-light .ctp-moon-icon {
+  fill: #475569;
+}

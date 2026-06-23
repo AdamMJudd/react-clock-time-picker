@@ -378,7 +378,26 @@ export default function ClockTimePicker({
 
               {/* Centre hub */}
               <circle cx={CX} cy={CY} r={INNER_R} className="ctp-inner-circle" />
-              <circle cx={CX} cy={CY} r={4} fill="var(--ctp-primary-color, #38bdf8)" />
+              {flipped ? (
+                /* Moon icon (Midnight) */
+                <path
+                  className="ctp-moon-icon"
+                  d={`M${CX + 3},${CY - 9} A9,9 0 1,1 ${CX - 9},${CY + 3} A7.5,7.5 0 1,0 ${CX + 3},${CY - 9} Z`}
+                />
+              ) : (
+                /* Sun icon (Midday) */
+                <g className="ctp-sun-icon">
+                  <circle cx={CX} cy={CY} r={6} />
+                  <line x1={CX} y1={CY - 12} x2={CX} y2={CY - 9} />
+                  <line x1={CX} y1={CY + 9} x2={CX} y2={CY + 12} />
+                  <line x1={CX - 12} y1={CY} x2={CX - 9} y2={CY} />
+                  <line x1={CX + 9} y1={CY} x2={CX + 12} y2={CY} />
+                  <line x1={CX - 8.5} y1={CY - 8.5} x2={CX - 6.4} y2={CY - 6.4} />
+                  <line x1={CX + 6.4} y1={CY + 6.4} x2={CX + 8.5} y2={CY + 8.5} />
+                  <line x1={CX - 8.5} y1={CY + 8.5} x2={CX - 6.4} y2={CY + 6.4} />
+                  <line x1={CX + 6.4} y1={CY - 6.4} x2={CX + 8.5} y2={CY - 8.5} />
+                </g>
+              )}
             </svg>
           </div>
 
