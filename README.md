@@ -2,7 +2,7 @@
 
 A premium, lightweight, interactive clock-face time picker for React. Select times dynamically with SVG geometry snapping, 3D card flips, and complete CSS variable-based customization.
 
-![Screenshot of Clock Time Picker](https://raw.githubusercontent.com/username/react-clock-time-picker/main/example/screenshot.png) *(Placeholder: Update this link when published)*
+![Screenshot of Clock Time Picker](example/Screenshot.png)
 
 ---
 
