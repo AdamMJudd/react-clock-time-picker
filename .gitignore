@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Bundler outputs
+dist/
+dist-example/
+
+# System / IDE settings
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.gemini/
+
+# Logs
+*.log
+npm-debug.log*

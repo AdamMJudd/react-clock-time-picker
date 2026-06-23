@@ -1,0 +1,35 @@
+{
+  "name": "react-clock-time-picker",
+  "version": "1.0.0",
+  "description": "A premium, lightweight, interactive clock-face time picker for React.",
+  "main": "./dist/react-clock-time-picker.umd.js",
+  "module": "./dist/react-clock-time-picker.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/react-clock-time-picker.es.js",
+      "require": "./dist/react-clock-time-picker.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "example:dev": "vite --config example/vite.config.js",
+    "example:build": "vite build --config example/vite.config.js"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "^5.4.10"
+  }
+}

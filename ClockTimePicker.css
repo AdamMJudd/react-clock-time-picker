@@ -1,0 +1,340 @@
+/* ==========================================================================
+   ClockTimePicker — Clock-face time selection widget
+   Uses CSS custom properties with fallbacks for theme support
+   ========================================================================== */
+
+/* Define variables for the picker component with robust fallbacks */
+:root {
+  --ctp-primary: var(--color-primary, #38bdf8);
+  --ctp-primary-dark: var(--color-primary-dark, #0284c7);
+  --ctp-bg-input: var(--bg-input, #1e293b);
+  --ctp-border-input: var(--color-border-input, #334155);
+  --ctp-bg-panel: var(--bg-panel, #0f172a);
+  --ctp-border: var(--color-border, #1e293b);
+  --ctp-shadow: var(--shadow-modal, 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3));
+  --ctp-text: var(--color-text, #f8fafc);
+  --ctp-muted: var(--color-muted, #94a3b8);
+  --ctp-transition: var(--transition-default, all 0.2s cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+/* Fallback light values if light-theme class is active */
+.light-theme,
+.ctp-light {
+  --ctp-primary: var(--color-primary, #0284c7);
+  --ctp-primary-dark: var(--color-primary-dark, #0369a1);
+  --ctp-bg-input: var(--bg-input, #f1f5f9);
+  --ctp-border-input: var(--color-border-input, #cbd5e1);
+  --ctp-bg-panel: var(--bg-panel, #ffffff);
+  --ctp-border: var(--color-border, #e2e8f0);
+  --ctp-shadow: var(--shadow-modal, 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1));
+  --ctp-text: var(--color-text, #0f172a);
+  --ctp-muted: var(--color-muted, #64748b);
+}
+
+/* --- Wrapper & Input Row --- */
+.ctp-wrapper {
+  position: relative;
+  width: 100%;
+  font-family: inherit;
+}
+
+.ctp-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.ctp-text-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--ctp-bg-input);
+  border: 1px solid var(--ctp-border-input);
+  border-radius: 8px;
+  color: var(--ctp-text);
+  padding: 8px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: var(--ctp-transition);
+}
+
+.ctp-text-input:focus {
+  border-color: var(--ctp-primary);
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.ctp-clock-btn {
+  flex-shrink: 0;
+  background: var(--ctp-bg-input);
+  border: 1px solid var(--ctp-border-input);
+  border-radius: 8px;
+  color: var(--ctp-primary);
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  padding: 6px 10px;
+  transition: var(--ctp-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+}
+.ctp-clock-btn:hover:not(:disabled) {
+  background: var(--ctp-primary);
+  color: #fff;
+  border-color: var(--ctp-primary);
+}
+.ctp-clock-btn:disabled,
+.ctp-text-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- Popover --- */
+.ctp-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 1000;
+  background: var(--ctp-bg-panel);
+  border: 1px solid var(--ctp-border);
+  border-radius: 18px;
+  box-shadow: var(--ctp-shadow);
+  padding: 16px;
+  width: 264px;
+  box-sizing: border-box;
+  animation: ctpFadeIn 0.16s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes ctpFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* --- Popover Header --- */
+.ctp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  min-height: 28px;
+  user-select: none;
+}
+
+.ctp-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ctp-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.ctp-preview-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+}
+
+.ctp-preview {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ctp-primary);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
+  line-height: 1;
+}
+
+.ctp-preview-24h {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ctp-muted);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.ctp-period-indicator {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  transition: background 0.3s, color 0.3s;
+}
+.ctp-period-am {
+  background: rgba(56, 189, 248, 0.18);
+  color: #38bdf8;
+}
+.ctp-period-pm {
+  background: rgba(251, 146, 60, 0.18);
+  color: #fb923c;
+}
+.light-theme .ctp-period-am,
+.ctp-light .ctp-period-am {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+.light-theme .ctp-period-pm,
+.ctp-light .ctp-period-pm {
+  background: rgba(234, 88, 12, 0.12);
+  color: #ea580c;
+}
+
+/* --- SVG Clock --- */
+.ctp-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  cursor: crosshair;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+/* Semicircle halves — color transitions enable the flip effect */
+.ctp-half {
+  transition: fill 0.45s ease, stroke 0.45s ease;
+}
+.ctp-half-am {
+  fill: rgba(56, 189, 248, 0.14);
+  stroke: rgba(56, 189, 248, 0.35);
+  stroke-width: 1;
+}
+.ctp-half-pm {
+  fill: rgba(251, 146, 60, 0.14);
+  stroke: rgba(251, 146, 60, 0.35);
+  stroke-width: 1;
+}
+.light-theme .ctp-half-am,
+.ctp-light .ctp-half-am {
+  fill: rgba(2, 132, 199, 0.10);
+  stroke: rgba(2, 132, 199, 0.3);
+}
+.light-theme .ctp-half-pm,
+.ctp-light .ctp-half-pm {
+  fill: rgba(234, 88, 12, 0.10);
+  stroke: rgba(234, 88, 12, 0.3);
+}
+
+/* Hover wedge */
+.ctp-hover-wedge {
+  fill: rgba(255, 255, 255, 0.18);
+  stroke: rgba(255, 255, 255, 0.45);
+  stroke-width: 0.5;
+  pointer-events: none;
+  filter: blur(0.5px);
+}
+.light-theme .ctp-hover-wedge,
+.ctp-light .ctp-hover-wedge {
+  fill: rgba(0, 0, 0, 0.08);
+  stroke: rgba(0, 0, 0, 0.2);
+}
+
+/* Selected wedge */
+.ctp-selected-wedge {
+  fill: rgba(56, 189, 248, 0.30);
+  stroke: rgba(56, 189, 248, 0.7);
+  stroke-width: 1;
+  pointer-events: none;
+}
+.light-theme .ctp-selected-wedge,
+.ctp-light .ctp-selected-wedge {
+  fill: rgba(2, 132, 199, 0.20);
+  stroke: rgba(2, 132, 199, 0.55);
+}
+
+/* Clock structural elements */
+.ctp-circle-bg {
+  fill: var(--ctp-bg-input);
+}
+.ctp-circle-outline {
+  fill: none;
+  stroke: var(--ctp-border-input);
+  stroke-width: 1.5;
+}
+.ctp-inner-circle {
+  fill: var(--ctp-bg-panel);
+  stroke: var(--ctp-border-input);
+  stroke-width: 1;
+}
+.ctp-divider {
+  stroke: var(--ctp-border-input);
+  stroke-width: 1;
+  stroke-dasharray: 4, 4;
+  opacity: 0.6;
+}
+.ctp-tick {
+  stroke: var(--ctp-border-input);
+  stroke-width: 1;
+  opacity: 0.4;
+}
+
+/* Time hand (indicator line) */
+.ctp-hand {
+  stroke: var(--ctp-primary);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+/* Text labels on clock face */
+.ctp-hour-label {
+  fill: var(--ctp-text);
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+}
+.ctp-period-text {
+  fill: var(--ctp-muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.65;
+}
+
+/* --- Footer --- */
+.ctp-footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ctp-flip-btn,
+.ctp-close-btn {
+  flex: 1;
+  background: var(--ctp-bg-input);
+  border: 1px solid var(--ctp-border-input);
+  border-radius: 8px;
+  color: var(--ctp-text);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 8px;
+  transition: var(--ctp-transition);
+}
+.ctp-flip-btn:hover {
+  background: var(--ctp-primary);
+  color: #fff;
+  border-color: var(--ctp-primary);
+}
+.ctp-close-btn:hover {
+  background: var(--ctp-border-input);
+}
+
+/* Flip animation on the SVG wrapper */
+.ctp-svg-wrapper {
+  transition: transform 0.45s ease;
+}
+.ctp-svg-wrapper.flipping {
+  transform: rotateY(90deg);
+}
