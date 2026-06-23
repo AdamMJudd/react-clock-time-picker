@@ -348,8 +348,8 @@ export default function ClockTimePicker({
               />
 
               {/* AM / PM period labels — swap content when flipped */}
-              <text x={CX - 34} y={CY + 4} className="ctp-period-text" dominantBaseline="middle" textAnchor="middle">{flipped ? 'PM' : 'AM'}</text>
-              <text x={CX + 34} y={CY + 4} className="ctp-period-text" dominantBaseline="middle" textAnchor="middle">{flipped ? 'AM' : 'PM'}</text>
+              <text x={CX - 44} y={CY + 4} className="ctp-period-text" dominantBaseline="middle" textAnchor="middle">{flipped ? 'PM' : 'AM'}</text>
+              <text x={CX + 44} y={CY + 4} className="ctp-period-text" dominantBaseline="middle" textAnchor="middle">{flipped ? 'AM' : 'PM'}</text>
 
               {/* Hour number labels */}
               {HOUR_LABELS.map((h, i) => {
