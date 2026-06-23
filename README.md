@@ -9,7 +9,7 @@ A premium, lightweight, interactive clock-face time picker for React. Select tim
 ## Features
 
 - **No Bloated Dependencies:** Driven purely by React state and math/SVG logic.
-- **Dynamic Snap-to-Interval:** Snaps mouse/touch angles instantly to 15-minute intervals.
+- **Configurable Snapping Intervals:** Dynamically snap mouse/touch angles to 5, 10, 15, 30, or 60-minute increments.
 - **AM/PM card flip:** Transitions smoothly between AM and PM halves with a 3D Y-axis flip.
 - **Modern Themeable CSS:** Fully responsive, supporting custom properties and dark/light modes out of the box.
 
@@ -45,6 +45,7 @@ function App() {
         label="Start Time"
         value={time}
         onChange={(newTime) => setTime(newTime)}
+        interval={15} // Optional: 5, 10, 15, 30, or 60-minute snapping
       />
       <p>Selected time in 24h format: {time}</p>
     </div>
