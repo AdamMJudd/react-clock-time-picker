@@ -7,6 +7,7 @@ export default function App() {
   const [time2, setTime2] = useState('17:30');
   const [timeDisabled, setTimeDisabled] = useState('12:00');
   const [theme, setTheme] = useState('dark');
+  const [interval, setInterval] = useState(15);
 
   const toggleTheme = () => {
     setTheme(t => t === 'dark' ? 'light' : 'dark');
@@ -143,6 +144,37 @@ export default function App() {
         .full-width-card {
           grid-column: 1 / -1;
         }
+        .interval-btn {
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: inherit;
+          padding: 6px 12px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 600;
+          transition: all 0.2s ease;
+        }
+        .interval-btn:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+        .interval-btn.active {
+          background: var(--ctp-primary, #38bdf8);
+          border-color: var(--ctp-primary, #38bdf8);
+          color: #fff;
+        }
+        .light-theme .interval-btn {
+          background: rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        .light-theme .interval-btn:hover {
+          background: rgba(0, 0, 0, 0.08);
+        }
+        .light-theme .interval-btn.active {
+          background: var(--ctp-primary, #0284c7);
+          border-color: var(--ctp-primary, #0284c7);
+          color: #fff;
+        }
       `}</style>
 
       <div className="demo-wrapper">
@@ -176,6 +208,31 @@ export default function App() {
               placeholder="e.g. 17:00"
             />
             <div className="value-display">Value: "{time2}"</div>
+          </div>
+
+          <div className="picker-card full-width-card">
+            <span className="picker-label">Granularity Customizer</span>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
+              <span style={{ fontSize: 14 }}>Snapping Interval:</span>
+              {[5, 10, 15, 30, 60].map((int) => (
+                <button
+                  key={int}
+                  type="button"
+                  onClick={() => setInterval(int)}
+                  className={`interval-btn ${interval === int ? 'active' : ''}`}
+                >
+                  {int} min
+                </button>
+              ))}
+            </div>
+            <ClockTimePicker
+              id="time-granularity"
+              label={`${interval}m Interval`}
+              value={time1}
+              onChange={setTime1}
+              interval={interval}
+            />
+            <div className="value-display" style={{ marginTop: 12 }}>Value: "{time1}" (snaps to {interval}-minute boundaries)</div>
           </div>
 
           <div className="picker-card full-width-card">

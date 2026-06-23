@@ -93,6 +93,7 @@ You can run the interactive sandbox locally to test components during developmen
 | `buttonClassName`| `string` | `""` | Custom class appended to the toggle clock icon button. |
 | `placeholder` | `string` | `"e.g. 09:00"` | Placeholder text displayed in the text input. |
 | `disabled` | `boolean` | `false` | When true, disables interactions and input modification. |
+| `interval` | `number` | `15` | The granularity of time slot selection in minutes. Accepted values: `5`, `10`, `15`, `30`, `60`. |
 
 ---
 

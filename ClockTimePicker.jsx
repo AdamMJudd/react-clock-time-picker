@@ -45,9 +45,10 @@ function wedgePath(startDeg, endDeg) {
  * Given a slot (0-47, each 7.5°) and isAM, return "HH:MM" 24-h string.
  * Slot 0 = 12:00, slot 4 = 1:00, … slot 44 = 11:00
  */
-function slotToTime(slot, isAM) {
-  const hourIndex = Math.floor(slot / 4); // 0-11  (0 → hour 12, 1 → hour 1 …)
-  const minute    = (slot % 4) * 15;      // 0, 15, 30, 45
+function slotToTime(slot, isAM, interval) {
+  const slotsPerHour = 60 / interval;
+  const hourIndex = Math.floor(slot / slotsPerHour); // 0-11  (0 → hour 12, 1 → hour 1 …)
+  const minute    = Math.round((slot % slotsPerHour) * interval);
   const hour12    = hourIndex === 0 ? 12 : hourIndex;
   let   hour24;
   if (isAM) {
@@ -68,7 +69,7 @@ function formatTo12h(timeStr) {
 }
 
 /** Parse "HH:MM" into { slot, isAM } for pre-highlighting the selected time. */
-function parseTimeToSlot(timeStr) {
+function parseTimeToSlot(timeStr, interval) {
   if (!timeStr) return null;
   const m = timeStr.match(/^(\d{1,2}):(\d{2})$/);
   if (!m) return null;
@@ -78,8 +79,9 @@ function parseTimeToSlot(timeStr) {
   const isAM     = h < 12;
   const hour12   = h % 12 || 12; // convert 0→12, 13→1, etc.
   const hourIdx  = hour12 === 12 ? 0 : hour12; // 0-11
-  const minSlot  = Math.round(mn / 15) % 4;
-  return { slot: hourIdx * 4 + minSlot, isAM };
+  const slotsPerHour = 60 / interval;
+  const minSlot  = Math.round(mn / interval) % slotsPerHour;
+  return { slot: hourIdx * slotsPerHour + minSlot, isAM };
 }
 
 /* ==========================================================================
@@ -113,7 +115,8 @@ export default function ClockTimePicker({
   inputClassName = '',
   buttonClassName = '',
   placeholder = 'e.g. 09:00',
-  disabled = false
+  disabled = false,
+  interval = 15
 }) {
   const [open,     setOpen]     = useState(false);
   const [hover,    setHover]    = useState(null);   // { slot, isAM } | null
@@ -122,6 +125,11 @@ export default function ClockTimePicker({
 
   const svgRef     = useRef(null);
   const wrapperRef = useRef(null);
+
+  const validInterval = [5, 10, 15, 30, 60].includes(interval) ? interval : 15;
+  const slotsPerHour  = 60 / validInterval;
+  const totalSlots    = 12 * slotsPerHour;
+  const slotAngle     = validInterval / 2;
 
   /* Close popover on outside click ---------------------------------------- */
   useEffect(() => {
@@ -158,9 +166,9 @@ export default function ClockTimePicker({
     if (angle < 0)   angle += 360;
     if (angle >= 360) angle -= 360;
 
-    // Snap to 15-min slot (7.5° each)
-    const slot      = Math.round(angle / 7.5) % 48;
-    const hourIndex = Math.floor(slot / 4); // 0-11 where 0 = the "12" position
+    // Snap to interval slot
+    const slot      = Math.round(angle / slotAngle) % totalSlots;
+    const hourIndex = Math.floor(slot / slotsPerHour); // 0-11 where 0 = the "12" position
 
     // AM/PM: left side (dx<0) = AM normally, right = PM; flip swaps this.
     // Exception: hour-12 (slot 0-3, hourIndex===0) sits on the top of the
@@ -187,7 +195,7 @@ export default function ClockTimePicker({
     if (disabled) return;
     const info = getSlotFromEvent(e);
     if (!info) return;
-    onChange(slotToTime(info.slot, info.isAM));
+    onChange(slotToTime(info.slot, info.isAM, validInterval));
     setOpen(false);
   }
 
@@ -206,19 +214,19 @@ export default function ClockTimePicker({
   /* -------------------------------------------------------------------------
      Derived display values
   --------------------------------------------------------------------------- */
-  const selected     = parseTimeToSlot(value);
+  const selected     = parseTimeToSlot(value, validInterval);
   const displaySlot  = hover ?? selected;
-  const previewTime  = displaySlot ? slotToTime(displaySlot.slot, displaySlot.isAM) : (value || '');
+  const previewTime  = displaySlot ? slotToTime(displaySlot.slot, displaySlot.isAM, validInterval) : (value || '');
   const periodIsAM   = displaySlot ? displaySlot.isAM : true;
 
-  const hoverStart   = hover ? hover.slot * 7.5 : null;
-  const hoverEnd     = hover ? (hover.slot + 1) * 7.5 : null;
-  const selStart     = selected ? selected.slot * 7.5 : null;
-  const selEnd       = selected ? (selected.slot + 1) * 7.5 : null;
+  const hoverStart   = hover ? hover.slot * slotAngle : null;
+  const hoverEnd     = hover ? (hover.slot + 1) * slotAngle : null;
+  const selStart     = selected ? selected.slot * slotAngle : null;
+  const selEnd       = selected ? (selected.slot + 1) * slotAngle : null;
 
   // Draw the hand from center toward the midpoint of the active slot
   const activeSlot   = hover ?? selected;
-  const handAngle    = activeSlot ? (activeSlot.slot + 0.5) * 7.5 : null;
+  const handAngle    = activeSlot ? (activeSlot.slot + 0.5) * slotAngle : null;
   const handEnd      = handAngle !== null ? polarXY(R * 0.72, handAngle) : null;
 
   /* -------------------------------------------------------------------------
@@ -314,12 +322,12 @@ export default function ClockTimePicker({
               {/* Clock outline */}
               <circle cx={CX} cy={CY} r={R} className="ctp-circle-outline" />
 
-              {/* Minute tick marks (48 ticks at 7.5° intervals) */}
-              {Array.from({ length: 48 }, (_, i) => {
-                const a    = i * 7.5;
+              {/* Minute tick marks */}
+              {Array.from({ length: totalSlots }, (_, i) => {
+                const a    = i * slotAngle;
                 const outer = polarXY(R - 1, a);
                 const inner = polarXY(TICK_R, a);
-                const isHour = i % 4 === 0;
+                const isHour = i % slotsPerHour === 0;
                 return (
                   <line
                     key={i}
