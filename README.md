@@ -95,7 +95,8 @@ You can run the interactive sandbox locally to test components during developmen
 | `buttonClassName`| `string` | `""` | Custom class appended to the toggle clock icon button. |
 | `placeholder` | `string` | `"e.g. 09:00"` | Placeholder text displayed in the text input. |
 | `disabled` | `boolean` | `false` | When true, disables interactions and input modification. |
-| `interval` | `number` | `15` | The granularity of time slot selection in minutes. Accepted values: `1`, `5`, `10`, `15`, `30`, `60`. |
+| `interval` | `number` | `15` | The initial/selected granularity of time slot selection in minutes. Accepted values: `1`, `5`, `10`, `15`, `30`, `60`. |
+| `intervals` | `number[]` | `[1, 5, 10, 15, 30]` | An array of snapping options displayed in the header interval picker. Set to `[]` to hide the selector and enforce a fixed `interval`. |
 > [!WARNING]
 > **Chronomaniac Mode (1-Minute Snapping):** Yes, for the absolute wildcards who demand surgeon-like, pixel-perfect 1-minute precision, we've enabled a 1-minute interval option. The component will happily segment the clock face into **720 invisible slices**.
 > 

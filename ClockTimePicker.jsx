@@ -116,17 +116,23 @@ export default function ClockTimePicker({
   buttonClassName = '',
   placeholder = 'e.g. 09:00',
   disabled = false,
-  interval = 15
+  interval = 15,
+  intervals = [1, 5, 10, 15, 30]
 }) {
   const [open,     setOpen]     = useState(false);
   const [hover,    setHover]    = useState(null);   // { slot, isAM } | null
   const [flipped,  setFlipped]  = useState(false);
   const [flipping, setFlipping] = useState(false);  // CSS animation flag
+  const [activeInterval, setActiveInterval] = useState(interval);
 
   const svgRef     = useRef(null);
   const wrapperRef = useRef(null);
 
-  const validInterval = [1, 5, 10, 15, 30, 60].includes(interval) ? interval : 15;
+  useEffect(() => {
+    setActiveInterval(interval);
+  }, [interval]);
+
+  const validInterval = [1, 5, 10, 15, 30, 60].includes(activeInterval) ? activeInterval : 15;
   const slotsPerHour  = 60 / validInterval;
   const totalSlots    = 12 * slotsPerHour;
   const slotAngle     = validInterval / 2;
@@ -264,7 +270,24 @@ export default function ClockTimePicker({
 
           {/* Header */}
           <div className="ctp-header">
-            <span className="ctp-label">{label}</span>
+            <div className="ctp-header-left">
+              <span className="ctp-label">{label}</span>
+              {intervals && intervals.length > 0 && (
+                <div className="ctp-interval-picker">
+                  {intervals.map((int) => (
+                    <button
+                      key={int}
+                      type="button"
+                      className={`ctp-interval-picker-btn ${validInterval === int ? 'active' : ''}`}
+                      onClick={() => setActiveInterval(int)}
+                      title={`${int}-minute interval`}
+                    >
+                      {int}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             {previewTime && (
               <div className="ctp-preview-block">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

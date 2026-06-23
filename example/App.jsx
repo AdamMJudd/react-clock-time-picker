@@ -7,7 +7,6 @@ export default function App() {
   const [time2, setTime2] = useState('17:30');
   const [timeDisabled, setTimeDisabled] = useState('12:00');
   const [theme, setTheme] = useState('dark');
-  const [interval, setInterval] = useState(15);
 
   const toggleTheme = () => {
     setTheme(t => t === 'dark' ? 'light' : 'dark');
@@ -210,29 +209,30 @@ export default function App() {
             <div className="value-display">Value: "{time2}"</div>
           </div>
 
-          <div className="picker-card full-width-card">
-            <span className="picker-label">Granularity Customizer</span>
-            <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', marginBottom: 16 }}>
-              <span style={{ fontSize: 14 }}>Snapping Interval:</span>
-              {[1, 5, 10, 15, 30, 60].map((int) => (
-                <button
-                  key={int}
-                  type="button"
-                  onClick={() => setInterval(int)}
-                  className={`interval-btn ${interval === int ? 'active' : ''}`}
-                >
-                  {int} min
-                </button>
-              ))}
-            </div>
+          <div className="picker-card">
+            <span className="picker-label">Customizable Intervals (e.g. 5, 15, 30 min)</span>
             <ClockTimePicker
-              id="time-granularity"
-              label={`${interval}m Interval`}
+              id="time-custom-intervals"
+              label="Select Time"
               value={time1}
               onChange={setTime1}
-              interval={interval}
+              intervals={[5, 15, 30]}
+              interval={15}
             />
-            <div className="value-display" style={{ marginTop: 12 }}>Value: "{time1}" (snaps to {interval}-minute boundaries)</div>
+            <div className="value-display">Value: "{time1}"</div>
+          </div>
+
+          <div className="picker-card">
+            <span className="picker-label">Fixed Snapping (No Selector - e.g. 10 min)</span>
+            <ClockTimePicker
+              id="time-fixed"
+              label="10m Slots"
+              value={time2}
+              onChange={setTime2}
+              intervals={[]}
+              interval={10}
+            />
+            <div className="value-display">Value: "{time2}"</div>
           </div>
 
           <div className="picker-card full-width-card">
